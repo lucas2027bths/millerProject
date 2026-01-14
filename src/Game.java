@@ -6,6 +6,15 @@ public class Game {
     public void runGame(){
         int[] specialStats = giveStats();
         Player player = new Player(specialStats);
+        System.out.println("----------------------------------------------------");
+        System.out.println("  ______      _      _      ____  _    _ _______ \n" +
+                " |  ____/\\   | |    | |    / __ \\| |  | |__   __|\n" +
+                " | |__ /  \\  | |    | |   | |  | | |  | |  | |   \n" +
+                " |  __/ /\\ \\ | |    | |   | |  | | |  | |  | |   \n" +
+                " | | / ____ \\| |____| |___| |__| | |__| |  | |   \n" +
+                " |_|/_/    \\_\\______|______\\____/ \\____/   |_|   \n" +
+                "                                                 \n" +
+                "                                                 ");
     }
     private int[] giveStats() {
         Scanner scan = new Scanner(System.in);
@@ -24,6 +33,7 @@ public class Game {
         System.out.println("Remember, only type from "+minStat+"-"+maxStat);
         for (int x = 0; x < special.length;x++){
             System.out.print("Please type the points you would like to set for " + special[x] + ": ");
+            SoundPlayer.playSound("src/startTurn.wav",false);
             int setValue = scan.nextInt();
 
             while (setValue > maxStat || setValue < minStat){

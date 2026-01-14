@@ -38,9 +38,5 @@ public class Player {
         return distributePoints;
     }
 
-    public int getIntelligence(){
-        return intelligence;
-    }
-
 
 }
