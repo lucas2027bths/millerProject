@@ -2,25 +2,45 @@ import java.util.Scanner;
 
 public class Player {
     private int Name;
-    private int defaultStat = 5;
+    private final static int defaultStat = 5;
+    private final static int maxStat = 10;
+    private final static int minStat = 1;
+    private final static int distributePoints = 7;
     //S.P.E.C.I.A.L traits
-    private int Intelligence = defaultStat;
-    private int Strength = defaultStat;
-    private int Endurance = defaultStat;
-    private int Charisma = defaultStat;
-    private int Agility = defaultStat;
-    private int Luck = defaultStat;
-    private int Perception = defaultStat;
-
-    public Player(){
-
+    private int intelligence;
+    private int strength;
+    private int endurance;
+    private int charisma;
+    private int agility ;
+    private int luck ;
+    private int perception;
+    private int health;
+    private int actionPoints;
+    public Player(int[]special){
+        strength = special[0];
+        perception = special[1];
+        endurance = special[2];
+        charisma = special[3];
+        intelligence = special[4];
+        agility = special[5];
+        luck = special[6];
+    }
+    public static int getDefaultStat(){
+       return defaultStat;
+    }
+    public static int getMaxStat(){
+        return maxStat;
+    }
+    public static int getMinStat(){
+        return minStat;
+    }
+    public static int getDistributePoints(){
+        return distributePoints;
     }
 
-    private void giveStats() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Welcome to fallout player");
-        System.out.println("You will create a character to go out into the wasteland");
-        System.out.println("You have been given 5 points to give to your S.P.E.C.I.A.L. They all start off at 5");
-        System.out.println("Keep in mind that they max out at 10");
+    public int getIntelligence(){
+        return intelligence;
     }
+
+
 }
