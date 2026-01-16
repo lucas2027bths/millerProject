@@ -16,6 +16,7 @@ public class Player {
     private int perception;
     private int health;
     private int actionPoints;
+    private final int defaultHealth = 40;
     public Player(int[]special){
         strength = special[0];
         perception = special[1];
@@ -24,9 +25,10 @@ public class Player {
         intelligence = special[4];
         agility = special[5];
         luck = special[6];
+        health = defaultHealth * endurance;
     }
     public static int getDefaultStat(){
-       return defaultStat;
+        return defaultStat;
     }
     public static int getMaxStat(){
         return maxStat;
@@ -38,5 +40,8 @@ public class Player {
         return distributePoints;
     }
 
-
+    public void takeDamage(int damage){
+        System.out.println("You took " + damage + "!");
+        health -= damage;
+    }
 }

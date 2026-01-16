@@ -7,14 +7,7 @@ public class Game {
         int[] specialStats = giveStats();
         Player player = new Player(specialStats);
         System.out.println("----------------------------------------------------");
-        System.out.println("  ______      _      _      ____  _    _ _______ \n" +
-                " |  ____/\\   | |    | |    / __ \\| |  | |__   __|\n" +
-                " | |__ /  \\  | |    | |   | |  | | |  | |  | |   \n" +
-                " |  __/ /\\ \\ | |    | |   | |  | | |  | |  | |   \n" +
-                " | | / ____ \\| |____| |___| |__| | |__| |  | |   \n" +
-                " |_|/_/    \\_\\______|______\\____/ \\____/   |_|   \n" +
-                "                                                 \n" +
-                "                                                 ");
+        SoundPlayer.playSound("src/hor.wav",true);
     }
     private int[] giveStats() {
         Scanner scan = new Scanner(System.in);
@@ -23,7 +16,7 @@ public class Game {
         int minStat = Player.getMinStat();
         int distributePoints = Player.getDistributePoints();
         System.out.println("Welcome to fallout player");
-        System.out.println("You will create a character to go out into the wasteland");
+        System.out.println("You will create a character to fight frank horrigan");
         System.out.println("You have been given " + distributePoints + " points to give to your S.P.E.C.I.A.L. They all start off at " + defaultStat);
         System.out.println("You can lower the other stats to gain more points to distribute");
         System.out.println("Keep in mind that they max out at " + maxStat);
