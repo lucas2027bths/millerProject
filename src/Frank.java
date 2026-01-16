@@ -1,4 +1,7 @@
 public class Frank {
+
+    private final int actionSpeed = 750;
+
     private int health;
     private final int maxHealth = 999;
 
@@ -26,24 +29,23 @@ public class Frank {
     public Frank(Player player) {
         health = maxHealth;
         stimpaks = 10;
-        meleeDamage = 30;
+        meleeDamage = 22;
         defaultActionPoints = 10;
-        minigunDamage = 38;
+        minigunDamage = 18;
         bullets = 1000;
         this.player = player;
     }
 
-    public int turn() {
+    public void turn() throws InterruptedException {
         int actionPoints = defaultActionPoints;
-        int totalDamage = 0;
-
-        while (actionPoints > 1) {
-
-
-            if (health < maxHealth * 0.5 && stimpaks > 0 && actionPoints >= stimpakAP) {
+        while (actionPoints > 1 && health > 0) {
+            Thread.sleep(actionSpeed);
+            if (health < maxHealth * 0.5 && stimpaks > 0) {
+                System.out.println("Frank used a stimpak!");
                 stimpaks--;
                 health += stimpakHeal;
                 if (health > maxHealth) health = maxHealth;
+                System.out.println("Frank now has " +health + "!");
                 actionPoints -= stimpakAP;
                 continue;
             }
@@ -57,7 +59,6 @@ public class Frank {
                     if (random(0, 5) != 1) {
                         int dmg = random(minigunDamage, minigunDamage * luckRate);
                         player.takeDamage(dmg);
-                        totalDamage += dmg;
                     } else {
                         System.out.println("Frank missed");
                     }
@@ -77,21 +78,26 @@ public class Frank {
                 if (random(0, 5) != 1) {
                     int dmg = random(meleeDamage, meleeDamage * luckRate);
                     player.takeDamage(dmg);
-                    totalDamage += dmg;
                 } else {
                     System.out.println("Frank missed");
                 }
                 actionPoints -= meleeAp;
                 continue;
             }
-
             break;
         }
-
-        return totalDamage;
     }
-
+    public int getHealth(){
+        return health;
+    }
+    public void takeDamage(int damage){
+        System.out.println("Frank was hit for " + damage);
+        health -= damage;
+    }
     private int random(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
+    }
+    public int getBullets(){
+        return bullets;
     }
 }

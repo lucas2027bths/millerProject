@@ -1,16 +1,27 @@
 import javax.crypto.spec.DESedeKeySpec;
 import java.util.Scanner;
 import java.util.Set;
-
 public class Game {
-    public void runGame(){
+    public static Scanner scan = new Scanner(System.in);
+    public void runGame() throws InterruptedException {
         int[] specialStats = giveStats();
         Player player = new Player(specialStats);
         System.out.println("----------------------------------------------------");
-        SoundPlayer.playSound("src/hor.wav",true);
+//        SoundPlayer.playSound("src/hor.wav",true);
+        Frank frank = new Frank(player);
+        player.setEnemey(frank);
+        while (frank.getHealth() > 0 && player.getHealth() > 0){
+            player.turn();
+            frank.turn();
+        }
+        if (player.getHealth() > 0){
+            System.out.println("congrats you won");
+        }else{
+            System.out.println("you lost you suck");
+            Screens.deathScreen();
+        }
     }
     private int[] giveStats() {
-        Scanner scan = new Scanner(System.in);
         int defaultStat = Player.getDefaultStat();
         int maxStat = Player.getMaxStat();
         int minStat = Player.getMinStat();
@@ -48,7 +59,6 @@ public class Game {
             System.out.println("Your " + special[x] + " is now " + setValue);
             System.out.println("Your distribution points are: " +distributePoints);
         }
-        scan.close();
         return specialNums;
     }
 }
