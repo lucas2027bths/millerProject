@@ -1,103 +1,120 @@
 public class Frank {
-
-    private final int actionSpeed = 750;
-
     private int health;
-    private final int maxHealth = 999;
+    private final int MAX_HEALTH = 999;
 
     private int stimpaks;
-    private final int stimpakHeal = 42;
-    private final int stimpakAP = 2;
+    private static final int STIMPAK_HEAL = 42;
+    private static final int STIMPAK_AP = 2;
+    private final int MELEE_DAMAGE;
+    private static final int MELEE_AP = 3;
 
-    private final int luckRate = 2;
+    private final int MINIGUN_DAMAGE;
+    private static final int MINIGUN_AP = 4;
+    private static final int MINIGUN_RELOAD_AP = 2;
 
-    private final int meleeDamage;
-    private final int meleeAp = 3;
+    private int minigunClip;
+    private static final int MINIGUN_MAX_CLIP = 100;
 
-    private final int minigunDamage;
-    private final int minigunAp = 4;
-    private final int minigunReloadAp = 2;
-
-    private int minigunClip = 100;
-    private final int minigunMaxClip = 100;
-
-    private final int defaultActionPoints;
+    private final int DEFAULT_ACTION_POINTS;
     private int bullets;
+
+    private static final int LUCK_RATE = 2;
 
     private Player player;
 
     public Frank(Player player) {
-        health = maxHealth;
-        stimpaks = 10;
-        meleeDamage = 22;
-        defaultActionPoints = 10;
-        minigunDamage = 18;
-        bullets = 1000;
         this.player = player;
+        this.health = MAX_HEALTH;
+        this.stimpaks = 10;
+        this.MELEE_DAMAGE = 22;
+        this.MINIGUN_DAMAGE = 18;
+        this.minigunClip = MINIGUN_MAX_CLIP;
+        this.DEFAULT_ACTION_POINTS = 10;
+        this.bullets = 1000;
     }
 
-    public void turn() throws InterruptedException {
-        int actionPoints = defaultActionPoints;
+
+    public void turn() {
+        int actionPoints = DEFAULT_ACTION_POINTS;
+
         while (actionPoints > 1 && health > 0) {
-            Thread.sleep(actionSpeed);
-            if (health < maxHealth * 0.5 && stimpaks > 0) {
+
+            if (health < MAX_HEALTH * 0.5 && stimpaks > 0) {
                 System.out.println("Frank used a stimpak!");
                 stimpaks--;
-                health += stimpakHeal;
-                if (health > maxHealth) health = maxHealth;
-                System.out.println("Frank now has " +health + "!");
-                actionPoints -= stimpakAP;
+                health = Math.min(MAX_HEALTH, health + STIMPAK_HEAL);
+                System.out.println("Frank now has " + health + " HP!");
+                actionPoints -= STIMPAK_AP;
                 continue;
             }
 
-            if (actionPoints >= minigunAp && bullets > 0) {
+            if (actionPoints >= MINIGUN_AP && bullets > 0) {
                 if (minigunClip > 0) {
-                    System.out.println("Frank shot his minigun");
-                    minigunClip -= 25;
-                    bullets -= 25;
-
-                    if (random(0, 5) != 1) {
-                        int dmg = random(minigunDamage, minigunDamage * luckRate);
-                        player.takeDamage(dmg);
-                    } else {
-                        System.out.println("Frank missed");
-                    }
-
-                    actionPoints -= minigunAp;
-                    continue;
+                    shootMinigun();
+                    actionPoints -= MINIGUN_AP;
                 } else {
-                    System.out.println("Frank reloads");
-                    minigunClip = minigunMaxClip;
-                    actionPoints -= minigunReloadAp;
-                    continue;
+                    reloadMinigun();
+                    actionPoints -= MINIGUN_RELOAD_AP;
                 }
-            }
-
-            if (actionPoints >= meleeAp) {
-                System.out.println("Frank swung");
-                if (random(0, 5) != 1) {
-                    int dmg = random(meleeDamage, meleeDamage * luckRate);
-                    player.takeDamage(dmg);
-                } else {
-                    System.out.println("Frank missed");
-                }
-                actionPoints -= meleeAp;
                 continue;
             }
+
+            if (actionPoints >= MELEE_AP) {
+                meleeAttack();
+                actionPoints -= MELEE_AP;
+                continue;
+            }
+
             break;
         }
     }
-    public int getHealth(){
+
+
+    private void shootMinigun() {
+        System.out.println("Frank fired his minigun!");
+        SoundPlayer.playSound("src/minigunShoot.wav", true);
+
+        int shots = Math.min(25, minigunClip);
+        minigunClip -= shots;
+        bullets -= shots;
+
+        if (random(0, 5) != 1) {
+            int damage = random(MINIGUN_DAMAGE, MINIGUN_DAMAGE * LUCK_RATE);
+            player.takeDamage(damage);
+        } else {
+            System.out.println("Frank missed!");
+        }
+    }
+
+    private void reloadMinigun() {
+        System.out.println("Frank reloads his minigun!");
+        SoundPlayer.playSound("src/Minigun_Reload.wav", true);
+        minigunClip = MINIGUN_MAX_CLIP;
+    }
+
+    private void meleeAttack() {
+        System.out.println("Frank swung at the player!");
+        if (random(0, 5) != 1) {
+            int damage = random(MELEE_DAMAGE, MELEE_DAMAGE * LUCK_RATE);
+            player.takeDamage(damage);
+        } else {
+            System.out.println("Frank missed!");
+        }
+    }
+    public int getHealth() {
         return health;
     }
-    public void takeDamage(int damage){
-        System.out.println("Frank was hit for " + damage);
-        health -= damage;
+
+    public void takeDamage(int damage) {
+        System.out.println("Frank was hit for " + damage + " damage!");
+        health = Math.max(0, health - damage);
     }
+
+    public int getBullets() {
+        return bullets;
+    }
+
     private int random(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
-    }
-    public int getBullets(){
-        return bullets;
     }
 }

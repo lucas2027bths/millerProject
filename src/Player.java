@@ -1,127 +1,171 @@
 import java.util.Scanner;
 
 public class Player {
-    private int Name;
-    private final static int defaultStat = 5;
-    private final static int maxStat = 10;
-    private final static int minStat = 1;
-    private final static int distributePoints = 7;
 
-
-    private int stimpaks = 12;
-    private final int stimpakHeal = 10;
-    private final int stimpakAP = 2;
-
-    private final int gaussRifleAP = 4;
-    private final int gaussRifleReloadAp = 2;
-    private final int gaussClipMax = 25;
-    private int microFusionCells = 400;
-    private int gaussClip = gaussClipMax;
-    private int gaussRifleMinDamage = 40;
-    private int gaussRifleBulletSpend = 10;
-
-    private final int powerFistAP = 3;
-    private final int powerFistMinDamage = 15;
-    private Frank enemy;
-    //S.P.E.C.I.A.L traits
-    private int intelligence;
-    private int strength;
-    private int endurance;
-    private int charisma;
-    private int agility ;
-    private int luck ;
-    private int perception;
+    //Constants
+    private static final int DEFAULT_STAT = 5;
+    private static final int MAX_STAT = 10;
+    private static final int MIN_STAT = 1;
+    private static final int DISTRIBUTE_POINTS = 7;
+    private static final int DEFAULT_AGILITYPOINTS = 5;
+    //Health and other htings
+    private static final int DEFAULT_HEALTH = 140;
     private int health;
     private int maxHealth;
     private int actionPoints;
-    private final int defaultHealth = 40;
-    public Player(int[]special){
-        strength = special[0];
-        perception = special[1];
-        endurance = special[2];
-        charisma = special[3];
+
+   //stimpak
+    private int stimpaks = 12;
+    private static final int STIMPAK_HEAL = 10;
+    private static final int STIMPAK_AP = 2;
+    //gun
+    private static final int GAUSS_AP = 4;
+    private static final int GAUSS_RELOAD_AP = 2;
+    private static final int GAUSS_CLIP_MAX = 40;
+    private static final int GAUSS_MIN_DAMAGE = 25;
+    private static final int GAUSS_BULLET_COST = 10;
+
+    private int microFusionCells = 400;
+    private int gaussClip = GAUSS_CLIP_MAX;
+
+    //melee
+    private static final int POWER_FIST_AP = 3;
+    private static final int POWER_FIST_MIN_DAMAGE = 15;
+
+    //special
+    private int strength;
+    private int perception;
+    private int endurance;
+    private int charisma;
+    private int intelligence;
+    private int agility;
+    private int luck;
+
+    private Frank enemy;
+
+
+    public Player(int[] special) {
+        strength     = special[0];
+        perception   = special[1];
+        endurance    = special[2];
+        charisma     = special[3];
         intelligence = special[4];
-        agility = special[5];
-        luck = special[6];
-        maxHealth = defaultHealth * endurance;
+        agility      = special[5];
+        luck         = special[6];
+
+        maxHealth = DEFAULT_HEALTH + (20 * endurance);
         health = maxHealth;
     }
-    public static int getDefaultStat(){
-        return defaultStat;
-    }
-    public static int getMaxStat(){
-        return maxStat;
-    }
-    public static int getMinStat(){
-        return minStat;
-    }
-    public static int getDistributePoints(){
-        return distributePoints;
-    }
-    public int getHealth(){
-        return health;
-    }
-    public void takeDamage(int damage){
+
+    public static int getDefaultStat() { return DEFAULT_STAT; }
+    public static int getMaxStat() { return MAX_STAT; }
+    public static int getMinStat() { return MIN_STAT; }
+    public static int getDistributePoints() { return DISTRIBUTE_POINTS; }
+    public int getHealth() { return health; }
+
+
+    public void takeDamage(int damage) {
         System.out.println("You took " + damage + " damage!");
         health -= damage;
     }
-    public void setEnemey(Frank enemy){
+
+    public void setEnemy(Frank enemy) {
         this.enemy = enemy;
     }
-    public void turn(){
+
+    public void turn() {
         Scanner scanner = Game.scan;
-        actionPoints = agility;
+        actionPoints = DEFAULT_AGILITYPOINTS + (agility * 2);
+
         while (actionPoints > 1 && health > 0) {
-            System.out.println("You have " + actionPoints + " action points.");
-            System.out.println("1. Use Gauss Rifle (" + gaussClip + "/" + gaussClipMax + ") (" + gaussRifleAP + " AP)");
-            System.out.println("2. Use Power Fist (" + powerFistAP + " AP)");
-            System.out.println("3. Use Stimpak (" + stimpaks + " left.) ( " + stimpakAP + " AP) (" + health + " health)");
+            SoundPlayer.playSound("src/startTurn.wav", false);
+
+            System.out.println("\nAP: " + actionPoints);
+            System.out.println("1. Gauss Rifle (" + gaussClip + "/" + GAUSS_CLIP_MAX + ") (" + GAUSS_AP + " AP)");
+            System.out.println("2. Power Fist (" + POWER_FIST_AP + " AP)");
+            System.out.println("3. Stimpak (" + stimpaks + ") (" + STIMPAK_AP + " AP) HP: " + health);
             System.out.println("4. Skip turn");
-            System.out.println("5. Inspect Frank (No AP cost)");
+            System.out.println("5. Inspect Frank");
+
             int choice = scanner.nextInt();
-            if (choice == 1 && actionPoints >= 4 && microFusionCells > 0) {
-                if (gaussClip > 0) {
-                    if (random(0, 5 / luck) == 0) {
-                        enemy.takeDamage(random(gaussRifleMinDamage, gaussRifleMinDamage * perception));
-                    } else {
-                        System.out.println("You missed!");
-                    }
-                    gaussClip -= gaussRifleBulletSpend;
-                    actionPoints -= gaussRifleAP;
-                } else {
-                    System.out.println("reloading");
-                    gaussClip = gaussClipMax;
-                    microFusionCells -= gaussClipMax;
-                }
-            } else if (choice == 1) {
-                System.out.println("You either don't have enough Action points or you ran out of bullets");
-            }
-            if (choice == 2 && actionPoints >= 3) {
-                if (random(0, 5 / luck) == 0) {
-                    enemy.takeDamage(random(powerFistMinDamage, powerFistMinDamage * strength));
-                } else {
-                    System.out.println("You missed!");
-                }
-                actionPoints -= powerFistAP;
-            }else if (choice == 2){
-                System.out.println("You don't have enough action points!");
-            }
-            if (choice == 3 && stimpaks > 0) {
-                health = Math.min(maxHealth,(health+(stimpakHeal * intelligence)));
-                System.out.println("You now have " + health);
-                actionPoints -= stimpakAP;
-            }
-            if (choice == 4) {
-                break;
-            }
-            if (choice == 5){
-                System.out.println("Frank has " + enemy.getHealth() + " health and he has " + enemy.getBullets() + " bullets remaining");
+
+            switch (choice) {
+
+                case 1 -> useGaussRifle();
+                case 2 -> usePowerFist();
+                case 3 -> useStimpak();
+                case 4 -> { return; }
+                case 5 -> inspectEnemy();
+                default -> System.out.println("Invalid choice.");
             }
         }
     }
 
+    private void useGaussRifle() {
+        if (actionPoints < GAUSS_AP || microFusionCells <= 0) {
+            SoundPlayer.playSound("src/denied.wav", false);
+            System.out.println("Not enough AP or ammo.");
+            return;
+        }
+
+        if (gaussClip <= 0) {
+            SoundPlayer.playSound("src/reload.wav", true);
+            System.out.println("Reloading...");
+            gaussClip = GAUSS_CLIP_MAX;
+            microFusionCells -= GAUSS_CLIP_MAX;
+            actionPoints -= GAUSS_RELOAD_AP;
+            return;
+        }
+
+        SoundPlayer.playSound("src/gaussShoot.wav", true);
+        int hitChance = 50 + (luck * 5) + (perception * 3);
+        if (random(1, 100) <= hitChance) {
+            enemy.takeDamage(random(GAUSS_MIN_DAMAGE, GAUSS_MIN_DAMAGE + random(0, perception * 5)));
+        }else{
+            System.out.println("You missed!");
+        }
+        gaussClip -= GAUSS_BULLET_COST;
+        actionPoints -= GAUSS_AP;
+    }
+
+    private void usePowerFist() {
+        if (actionPoints < POWER_FIST_AP) {
+            SoundPlayer.playSound("src/denied.wav", false);
+            System.out.println("Not enough AP!");
+            return;
+        }
+        int hitChance = 50 + (luck * 5) + (perception * 3);
+        hitChance = Math.min(hitChance, 90);
+
+        if (random(1, 100) <= hitChance) {
+            enemy.takeDamage(random(POWER_FIST_MIN_DAMAGE, POWER_FIST_MIN_DAMAGE * strength));
+        }else{
+            System.out.println("You missed!");
+        }
+        actionPoints -= POWER_FIST_AP;
+    }
+
+    private void useStimpak() {
+        if (stimpaks <= 0 || actionPoints < STIMPAK_AP) {
+            SoundPlayer.playSound("src/denied.wav", false);
+            return;
+        }
+
+        health = Math.min(maxHealth, health + (STIMPAK_HEAL + (intelligence * 5)));
+        stimpaks--;
+        actionPoints -= STIMPAK_AP;
+
+        System.out.println("Health restored to " + health);
+    }
+
+    private void inspectEnemy() {
+        SoundPlayer.playSound("src/inspect.wav", false);
+        System.out.println("Frank HP: " + enemy.getHealth() +
+                " | Bullets: " + enemy.getBullets());
+    }
+
+
     private int random(int min, int max) {
         return (int) (Math.random() * (max - min + 1) + min);
     }
-
 }

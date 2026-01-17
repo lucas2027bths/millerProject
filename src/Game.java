@@ -1,23 +1,21 @@
-import javax.crypto.spec.DESedeKeySpec;
 import java.util.Scanner;
-import java.util.Set;
 public class Game {
     public static Scanner scan = new Scanner(System.in);
-    public void runGame() throws InterruptedException {
+    public void runGame() {
         int[] specialStats = giveStats();
         Player player = new Player(specialStats);
-        System.out.println("----------------------------------------------------");
-//        SoundPlayer.playSound("src/hor.wav",true);
+        System.out.println();
+        Screens.frankScreen();
         Frank frank = new Frank(player);
-        player.setEnemey(frank);
+        player.setEnemy(frank);
         while (frank.getHealth() > 0 && player.getHealth() > 0){
             player.turn();
             frank.turn();
         }
         if (player.getHealth() > 0){
-            System.out.println("congrats you won");
+            System.out.println("You won and Frank Horrigan was killed.");
         }else{
-            System.out.println("you lost you suck");
+            System.out.println("You lost.");
             Screens.deathScreen();
         }
     }
