@@ -75,7 +75,7 @@ public class Player {
 
     public void turn() {
         Scanner scanner = Game.scan;
-        actionPoints = DEFAULT_AGILITYPOINTS + (agility * 2);
+        actionPoints = DEFAULT_AGILITYPOINTS + agility;
 
         while (actionPoints > 1 && health > 0) {
             SoundPlayer.playSound("src/startTurn.wav", false);

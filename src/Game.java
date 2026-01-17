@@ -25,7 +25,7 @@ public class Game {
         int minStat = Player.getMinStat();
         int distributePoints = Player.getDistributePoints();
         System.out.println("Welcome to fallout player");
-        System.out.println("You will create a character to fight frank horrigan");
+        System.out.println("You will create a character to fight Frank Horrigan");
         System.out.println("You have been given " + distributePoints + " points to give to your S.P.E.C.I.A.L. They all start off at " + defaultStat);
         System.out.println("You can lower the other stats to gain more points to distribute");
         System.out.println("Keep in mind that they max out at " + maxStat);

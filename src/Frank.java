@@ -30,7 +30,7 @@ public class Frank {
         this.MINIGUN_DAMAGE = 18;
         this.minigunClip = MINIGUN_MAX_CLIP;
         this.DEFAULT_ACTION_POINTS = 10;
-        this.bullets = 1000;
+        this.bullets = 400;
     }
 
 
